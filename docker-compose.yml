@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  spark-master:
+    image: docker.io/bitnami/spark:3
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - '4050-4059:4040-4049'  # Spark shell UI
+      - '8080:8080'  # Spark master UI
+      - '7077:7077'  # Spark master url
+    volumes:
+      - ./work:/work
+      - ./work/data:/data
+      - ./conf/log4j.properties:/opt/bitnami/spark/conf/log4j.properties:ro
+  spark-worker:
+    image: docker.io/bitnami/spark:3
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=1G
+      - SPARK_WORKER_CORES=1
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    volumes:
+      - ./work:/work
+      - ./work/data:/data
+  jupyter:
+    # https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html
+    # image: jupyter/pyspark-notebook:spark-3.2.0
+    image: jupyter-pyspark-dev  # custom image with scala added
+    build:
+      context:  jupyter-pyspark-scala
+    user: root
+    environment:
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - '8888:8888'
+      - '4060-4069:4040-4049'  # Spark shell UI
+    volumes:
+      - ./conf/log4j.properties:/usr/local/spark/conf/log4j.properties:ro
+      - ./work:/home/jovyan/work
+      - ./work/data:/data
+      - ./.zcache/cache:/home/jovyan/.cache   # for sbt builds, cache downloads
+      - ./.zcache/m2:/home/jovyan/.m2   # for mvn builds, cache downloads
+
