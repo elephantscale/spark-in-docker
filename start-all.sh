@@ -5,7 +5,9 @@ if [ -n "$1" ] ; then
     NUM_WORKERS=$1
 fi
 
-# cache dir, set permission to user 1000 and group 100, this is wha tis used in jupyter docker
+# cache dir, set permission to user 1000 and group 100 (matching jupyter notebook user)
+# This will be used for sbt and maven builds.  So downloads will be cached 
+# between container restarts
 sudo mkdir -p .zcache;  sudo chown -R 1000:100 .zcache
 
 docker-compose  up --scale spark-worker=${NUM_WORKERS}  -d 

@@ -34,9 +34,9 @@ services:
   jupyter:
     # https://jupyter-docker-stacks.readthedocs.io/en/latest/using/common.html
     # image: jupyter/pyspark-notebook:spark-3.2.0
-    image: jupyter-pyspark-dev  # custom image with scala added
+    image: elephantscale/jupyter-pyspark-dev  # custom image with scala added
     build:
-      context:  jupyter-pyspark-scala
+      context:  jupyter-pyspark-dev
     user: root
     environment:
       - SPARK_MASTER_URL=spark://spark-master:7077

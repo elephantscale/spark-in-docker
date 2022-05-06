@@ -18,6 +18,7 @@ data
 .zcache
 
 metastore_db/
+tmp/
 
 *.class
 *.log
@@ -39,6 +40,12 @@ project/plugins/project/
 
 # IntelliJ
 .idea/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
 
 # python
 .ipynb_checkpoints
