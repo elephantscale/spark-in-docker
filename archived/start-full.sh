@@ -5,10 +5,14 @@ if [ -n "$1" ] ; then
     NUM_WORKERS=$1
 fi
 
+
+# set CURRENT_USER if not set
+export CURRENT_USER="${CURRENT_USER-$(id -u):$(id -g)}"
+
 # cache dir, set permission to user 1000 and group 100 (matching jupyter notebook user)
 # This will be used for sbt and maven builds.  So downloads will be cached 
 # between container restarts
-sudo mkdir -p .zcache;  sudo chown -R 1000:100 .zcache
+sudo mkdir -p .zcache ; #  sudo chown -R 1000:100 .zcache
 
 docker-compose  up --scale spark-worker=${NUM_WORKERS}  -d 
 
@@ -20,8 +24,10 @@ do
     jupyter_out=$(docker-compose  logs | grep '127\.0\.0\.1.*\/\?token=')
 done
 
+echo -e "\n------------------------------------------------------------------------------------------------------"
+echo -e "All services started!"
 echo ; echo "To access Jupyter notebook..."
 echo "$jupyter_out"
-
 echo "For Spark.app.ui ports running on spark master, add +10.  So Spark-master:4040 is localhost:4050"
 echo "For Spark.app.ui ports running on  jupyter, add +20.  So jupyter:4040 is localhost:4060"
+echo -e "\n------------------------------------------------------------------------------------------------------"

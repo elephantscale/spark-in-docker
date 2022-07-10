@@ -2,7 +2,7 @@ version: '3'
 
 services:
   spark-master:
-    image: docker.io/bitnami/spark:3.3
+    image: docker.io/bitnami/spark:3
     container_name: spark-master
     environment:
       - SPARK_MODE=master
@@ -16,13 +16,13 @@ services:
       - '7077:7077'  # Spark master url
     volumes:
       - ./:/workspace
-      - ./data:/data
+      - ./workspace/data:/data
       - ./conf/log4j.properties:/opt/bitnami/spark/conf/log4j.properties:ro
     networks:
       - bobafett-net
 
   spark-worker:
-    image: docker.io/bitnami/spark:3.3
+    image: docker.io/bitnami/spark:3
     environment:
       - SPARK_MODE=worker
       - SPARK_MASTER_URL=spark://spark-master:7077
@@ -34,9 +34,29 @@ services:
       - SPARK_SSL_ENABLED=no
     volumes:
       - ./:/workspace
-      - ./data:/data
+      - ./workspace/data:/data
     networks:
       - bobafett-net
+
+  jupyter:
+    image: elephantscale/spark-dev 
+    container_name: spark-dev
+    user: root
+    environment:
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - JUPYTER_ENABLE_LAB=yes
+    ports:
+      - '8888:8888'
+      - '4060-4069:4040-4049'  # Spark shell UI
+    volumes:
+      - ./conf/log4j.properties:/usr/local/spark/conf/log4j.properties:ro
+      - ./:/home/jovyan/workspace
+      - ./workspace/data:/data
+      - ./.zcache/cache:/home/jovyan/.cache   # for sbt builds, cache downloads
+      - ./.zcache/m2:/home/jovyan/.m2   # for mvn builds, cache downloads
+    networks:
+      - bobafett-net
+
 
 networks:
   bobafett-net:
