@@ -7,8 +7,9 @@ RUN apt-get update -yq && \
         apt-get install -yq  --no-install-recommends \
                 jq \
                 less \
-                vim   \
+		netcat \
                 zip \
+                vim   \
                 && \
         apt-get clean && \
         rm -rf /var/lib/apt/lists/*
@@ -31,7 +32,7 @@ RUN cd /usr/local;   wget -q https://dlcdn.apache.org/maven/maven-3/3.8.6/binari
 # Get Spark 3.3.0 built with Scala 2.12
 # and link it to /usr/local/spark
 RUN  cd /usr/local; wget -q https://dlcdn.apache.org/spark/spark-3.3.0/spark-3.3.0-bin-hadoop3.tgz  && \
-                tar xvf spark-3.3.0-bin-hadoop3.tgz && \
+                tar xf spark-3.3.0-bin-hadoop3.tgz && \
                 rm -f spark && \
                 ln -s spark-3.3.0-bin-hadoop3  spark && \
                 rm -f spark-3.3.0-bin-hadoop3.tgz 
