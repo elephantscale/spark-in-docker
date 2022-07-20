@@ -32,7 +32,7 @@ You will see startup logs
 
 Try these URLs:
 
-- Spark master at [http://localhost:8080](http://localhost:8080)
+- Spark master at port number 8080 (e.g. localhost:8080)
 
 That's it!
 
@@ -62,10 +62,10 @@ By default we start 1 master + 2 workers.
 To Start 1 master + 3 workers, supply the number of worker instances to the script
 
 ```bash
-$   bash ./start-all 3
+$    bash ./start-spark.sh 3
 ```
 
-Checkout Spark-master UI at [http://localhost:8080](http://localhost:8080) .  You will see 3 workers.
+Checkout Spark-master UI at port 8080 (e.g. localhost:8080) .  You will see 3 workers.
 
 Login to spark master
 
@@ -78,12 +78,17 @@ $   docker-compose exec spark-master  bash
 Login to spark master
 
 ```bash
+# on docker host
+
+$   cd spark-in-docker
 $   docker-compose exec spark-master  bash
 ```
 
 Within Spark-master container
 
 ```bash
+# within spark-master container
+
 $   echo $SPARK_HOME
 # output: /opt/bitnami/spark
 ```
@@ -93,9 +98,15 @@ $   echo $SPARK_HOME
 Run Spark-Pi example:
 
 ```bash
+# within spark-master container
+
 # run spark Pi example
-$   $SPARK_HOME/bin/spark-submit --master spark://spark-master:7077 --num-executors 2  \
---class org.apache.spark.examples.SparkPi $SPARK_HOME/examples/jars/spark-examples_*.jar 100
+$   $SPARK_HOME/bin/spark-submit \
+        --master spark://spark-master:7077 \
+        --num-executors 2  \
+        --class org.apache.spark.examples.SparkPi \
+        $SPARK_HOME/examples/jars/spark-examples_*.jar \
+        100
 ```
 
 Should get answer like
@@ -104,9 +115,9 @@ Should get answer like
 Pi is roughly 3.141634511416345
 ```
 
-Check master UI (8080).  Click on application .. should see 2 executors running on both workers.
+Check master UI (8080).  You will see applications being run!
 
-![](images/spark-pi-1.png)
+![](images/spark-master-ui-2.png)
 
 ### Spark Shell (Scala) (Run on Spark-Master)
 

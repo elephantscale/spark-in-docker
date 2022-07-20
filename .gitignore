@@ -9,12 +9,13 @@ logs*
 out*
 *.zip*
 *.out
-*.csv
-*.json
+#*.csv
+*.bsp
+data/clickstream/json
 ~*
 *~
 *.html
-data
+#data
 .zcache
 
 metastore_db/
