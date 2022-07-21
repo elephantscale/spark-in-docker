@@ -16,8 +16,9 @@ docker-compose   ps
 
 echo -e "\n------------------------------------------------------------------------------------------------------"
 echo -e "All services started!"
-echo "For Spark.app.ui ports running on spark master, add +10.  So Spark-master:4040 is localhost:4050"
-echo "For Spark.app.ui ports running on  jupyter, add +20.  So jupyter:4040 is localhost:4060"
+echo "For Spark.master.ui on port 8080"
+echo "For Spark.app.ui ports can be accessed starting 4040 to 4045"
+#echo "For Spark.app.ui ports running on  jupyter, add +20.  So jupyter:4040 is localhost:4060"
 echo -e "\n------------------------------------------------------------------------------------------------------"
 
 exit 0
