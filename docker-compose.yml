@@ -12,9 +12,9 @@ services:
       - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
       - SPARK_SSL_ENABLED=no
     ports:
-      - '4040-4045:4040-4045'  # Spark shell UI
       - '8080:8080'  # Spark master UI
       - '7077:7077'  # Spark master url
+      - '4050:4040'  # Spark shell UI
     volumes:
       - ./:/workspace
       - ./data:/data

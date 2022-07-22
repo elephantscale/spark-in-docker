@@ -7,7 +7,7 @@ This project runs multiple [Spark](https://spark.apache.org/) workers on a singl
 What it does:
 
 - Spin up Spark master + multiple workers effortlessly, on a single machine
-- Have a full Spark dev environment locally, with Java, Scala and Python (Jupyter)
+- Have a full Spark dev environment locally, with Java, Scala and Python and Jupyter
 - No need install any JDK, Python or Jupyter on local machine.  Every thing runs as Docker containers
 - Only thing needed is Docker and docker-compose
 
@@ -30,11 +30,11 @@ $   docker-compose ps # to see docker containers
 
 You will see startup logs
 
-Try these URLs:
-
-- Spark master at port number 8080 (e.g. localhost:8080)
+**Try Spark master UI at port number 8080 (e.g. localhost:8080)**
 
 That's it!
+
+![](images/spark-master-ui-1.png)
 
 ## Setup Explained
 
@@ -44,12 +44,11 @@ My additions:
 
 - mounting  current directory as `/workspace/` in spark docker containers.  Here is where all code would be
 - mounting `./data` directory as `/data/` in containers.  All data would be here
-- Ports `4050-4059` are mapped for Spark UI on Spark master
 
-**Note about port numbers**
+### Port Mappings
 
-- For Spark.app.ui ports running on spark master, add +10.  So Spark-master:4040 is localhost:4050
-- For Spark.app.ui ports, add +20.  So jupyter:4040 is localhost:4060
+- 8080 maps to spark-master:8080  (master UI)
+- 4050 maps to spark-master:4040 (this is for application UI (4040))
 
 Here is a little graphic explaining the setup:
 
@@ -66,12 +65,6 @@ $    bash ./start-spark.sh 3
 ```
 
 Checkout Spark-master UI at port 8080 (e.g. localhost:8080) .  You will see 3 workers.
-
-Login to spark master
-
-```bash
-$   docker-compose exec spark-master  bash
-```
 
 ## Testing the Setup
 
@@ -115,15 +108,21 @@ Should get answer like
 Pi is roughly 3.141634511416345
 ```
 
-Check master UI (8080).  You will see applications being run!
+Check master UI on **8080**.  You will see applications being run!
 
 ![](images/spark-master-ui-2.png)
+
+Also see the Spark application UI on port **4050**
+
+![](images/spark-application-ui-1.png)
 
 ### Spark Shell (Scala) (Run on Spark-Master)
 
 Execute the following in spark-master container
 
 ```bash
+# within spark-master container
+
 $   spark-shell  --master  spark://spark-master:7077
 ```
 
@@ -154,8 +153,14 @@ b.show
 Execute the following in spark-master container
 
 ```bash
+# within spark-master container
+
 $   pyspark    --master  spark://spark-master:7077
 ```
+
+Now try to access the UI at [http:.//localhost:4050](http:.//localhost:4050)  
+
+**Note** : This port is remapped to `4050`  
 
 In pyspark
 
@@ -170,6 +175,12 @@ b.printSchema()
 b.count()
 b.show()
 ```
+
+You can access the application UI on port number 4050 (this is equivalent of spark-ui 4040)
+
+![](images/spark-application-ui-1.png)
+
+![](images/spark-application-ui-2.png)
 
 ## Developing Applications
 
@@ -201,6 +212,5 @@ $   ping  spark-master
 $   telnet spark-master  7077
 # Press Ctrl + ] to exit
 ```
-
 
 ## Happy Sparking!
